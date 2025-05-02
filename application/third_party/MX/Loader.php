@@ -110,7 +110,9 @@ class MX_Loader extends CI_Loader
 		if (isset($this->_ci_classes[$class]) AND $_alias = $this->_ci_classes[$class])
 			return CI::$APP->$_alias;
 			
-		($_alias = strtolower($object_name)) OR $_alias = $class;
+		// ($_alias = strtolower($object_name)) OR $_alias = $class;
+		$_alias = is_string($object_name) ? strtolower($object_name) : $class;
+
 		
 		list($path, $_library) = Modules::find($library, $this->_module, 'libraries/');
 		

@@ -566,8 +566,11 @@ class CI_Xmlrpcs extends CI_Xmlrpc
 			return $this->multicall_error('nomethod');
 		}
 
-		list($scalar_type,$scalar_value)=each($methName->me);
-		$scalar_type = $scalar_type == $this->xmlrpcI4 ? $this->xmlrpcInt : $scalar_type;
+		foreach ($methName->me as $scalar_type => $scalar_value) {
+			$scalar_type = $scalar_type == $this->xmlrpcI4 ? $this->xmlrpcInt : $scalar_type;
+			break; // exit after the first iteration since `each()` only processes the first element
+		}
+		
 
 		if ($methName->kindOf() != 'scalar' OR $scalar_type != 'string')
 		{
@@ -586,8 +589,11 @@ class CI_Xmlrpcs extends CI_Xmlrpc
 			return $this->multicall_error('notarray');
 		}
 
-		list($a,$b)=each($params->me);
-		$numParams = count($b);
+		foreach ($params->me as $a => $b) {
+			$numParams = count($b);
+			break; // exit after the first iteration
+		}
+		
 
 		$msg = new XML_RPC_Message($scalar_value);
 		for ($i = 0; $i < $numParams; $i++)

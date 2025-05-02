@@ -28,7 +28,7 @@
  * @link		http://codeigniter.com/user_guide/libraries/encryption.html
  */
 class CI_Hooks {
-
+	
 	/**
 	 * Determines wether hooks are enabled
 	 *

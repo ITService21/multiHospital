@@ -39,6 +39,10 @@ require_once dirname(__FILE__).'/Config.php';
  **/
 class CI extends CI_Controller
 {
+	public $paypal_pro;
+	public $paypal;
+	public $patient;
+
 	public static $APP;
 	
 	public function __construct() {

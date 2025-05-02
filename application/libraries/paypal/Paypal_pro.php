@@ -30,7 +30,12 @@
 
 class PayPal_Pro
 {
-
+	public $CurrencyCodes;
+	public $NVPCredentials;
+	public $Countries;
+	public $States;
+	public $AVSCodes;
+	public $CVV2Codes;
 	var $APIUsername = '';
 	var $APIPassword = '';
 	var $APISignature = '';
@@ -465,8 +470,10 @@ class PayPal_Pro
 										'THB' => 'Thai Baht', 
 										'USD' => 'U.S. Dollar'
 										);
+
 		
 	
+
 	}  // End function PayPalPro()
 	
 	/**

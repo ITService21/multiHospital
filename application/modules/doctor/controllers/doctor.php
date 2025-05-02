@@ -238,44 +238,46 @@ class Doctor extends MX_Controller {
     }
 
     function getDoctor() {
+        // Suppress deprecated warnings
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+        
+        // Avoid headers already sent issues
+        header('Content-Type: application/json');
+    
         $requestData = $_REQUEST;
         $start = $requestData['start'];
         $limit = $requestData['length'];
         $search = $this->input->post('search')['value'];
-
+    
         if ($limit == -1) {
-            if (!empty($search)) {
-                $data['doctors'] = $this->doctor_model->getDoctorBysearch($search);
-            } else {
-                $data['doctors'] = $this->doctor_model->getDoctor();
-            }
+            $data['doctors'] = !empty($search)
+                ? $this->doctor_model->getDoctorBysearch($search)
+                : $this->doctor_model->getDoctor();
         } else {
-            if (!empty($search)) {
-                $data['doctors'] = $this->doctor_model->getDoctorByLimitBySearch($limit, $start, $search);
-            } else {
-                $data['doctors'] = $this->doctor_model->getDoctorByLimit($limit, $start);
-            }
+            $data['doctors'] = !empty($search)
+                ? $this->doctor_model->getDoctorByLimitBySearch($limit, $start, $search)
+                : $this->doctor_model->getDoctorByLimit($limit, $start);
         }
-        //  $data['doctors'] = $this->doctor_model->getDoctor();
-
+    
+        $info = array();
+    
         foreach ($data['doctors'] as $doctor) {
+            $options1 = '';
+            $options3 = '';
+            $options4 = '';
+            $options5 = '';
+            $options6 = '';
+    
             if ($this->ion_auth->in_group(array('admin', 'Accountant', 'Receptionist'))) {
                 $options1 = '<a type="button" class="btn btn-info btn-xs btn_width editbutton" title="' . lang('edit') . '" data-toggle="modal" data-id="' . $doctor->id . '"><i class="fa fa-edit"> </i> ' . lang('edit') . '</a>';
-                //   $options1 = '<a class="btn btn-info btn-xs btn_width" title="' . lang('edit') . '" href="doctor/editDoctor?id='.$doctor->id.'"><i class="fa fa-edit"> </i> ' . lang('edit') . '</a>';
-            }
-            $options2 = '<a class="btn btn-info btn-xs detailsbutton" title="' . lang('appointments') . '"  href="appointment/getAppointmentByDoctorId?id=' . $doctor->id . '"> <i class="fa fa-calendar"> </i> ' . lang('appointments') . '</a>';
-            if ($this->ion_auth->in_group(array('admin', 'Accountant', 'Receptionist'))) {
                 $options3 = '<a class="btn btn-info btn-xs btn_width delete_button" title="' . lang('delete') . '" href="doctor/delete?id=' . $doctor->id . '" onclick="return confirm(\'Are you sure you want to delete this item?\');"><i class="fa fa-trash-o"> </i> ' . lang('delete') . '</a>';
-            }
-
-
-
-            if ($this->ion_auth->in_group(array('admin', 'Accountant', 'Receptionist'))) {
                 $options4 = '<a href="schedule/holidays?doctor=' . $doctor->id . '" class="btn btn-info btn-xs btn_width" data-toggle="modal" data-id="' . $doctor->id . '"><i class="fa fa-book"></i> ' . lang('holiday') . '</a>';
                 $options5 = '<a href="schedule/timeSchedule?doctor=' . $doctor->id . '" class="btn btn-info btn-xs btn_width" data-toggle="modal" data-id="' . $doctor->id . '"><i class="fa fa-book"></i> ' . lang('time_schedule') . '</a>';
                 $options6 = '<a type="button" class="btn btn-info btn-xs btn_width detailsbutton inffo" title="' . lang('info') . '" data-toggle="modal" data-id="' . $doctor->id . '"><i class="fa fa-info"> </i> ' . lang('info') . '</a>';
             }
-
+    
+            $options2 = '<a class="btn btn-info btn-xs detailsbutton" title="' . lang('appointments') . '"  href="appointment/getAppointmentByDoctorId?id=' . $doctor->id . '"> <i class="fa fa-calendar"> </i> ' . lang('appointments') . '</a>';
+    
             $info[] = array(
                 $doctor->id,
                 $doctor->name,
@@ -283,30 +285,21 @@ class Doctor extends MX_Controller {
                 $doctor->phone,
                 $doctor->department,
                 $doctor->profile,
-                //  $options1 . ' ' . $options2 . ' ' . $options3,
                 $options6 . ' ' . $options1 . ' ' . $options2 . ' ' . $options4 . ' ' . $options5 . ' ' . $options3,
-                    //  $options2
             );
         }
-
-        if (!empty($data['doctors'])) {
-            $output = array(
-                "draw" => intval($requestData['draw']),
-                "recordsTotal" => $this->db->get('doctor')->num_rows(),
-                "recordsFiltered" => $this->db->get('doctor')->num_rows(),
-                "data" => $info
-            );
-        } else {
-            $output = array(
-                // "draw" => 1,
-                "recordsTotal" => 0,
-                "recordsFiltered" => 0,
-                "data" => []
-            );
-        }
-
+    
+        $output = array(
+            "draw" => intval($requestData['draw']),
+            "recordsTotal" => $this->db->count_all('doctor'),
+            "recordsFiltered" => count($data['doctors']),
+            "data" => $info
+        );
+    
         echo json_encode($output);
+        exit;
     }
+    
 
 }
 

@@ -29,6 +29,10 @@
  */
 class CI_Loader {
 
+	// public $paypal_pro;
+	// public $paypal;
+
+ 
 	// All these are set automatically. Don't mess with them.
 	/**
 	 * Nesting level of the output buffering mechanism
@@ -1091,6 +1095,10 @@ class CI_Loader {
 
 		// Instantiate the class
 		$CI =& get_instance();
+
+
+
+
 		if ($config !== NULL)
 		{
 			$CI->$classvar = new $name($config);

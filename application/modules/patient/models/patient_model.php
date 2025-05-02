@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Patient_model extends CI_model {
-
+    public $patient;
     function __construct() {
         parent::__construct();
         $this->load->database();

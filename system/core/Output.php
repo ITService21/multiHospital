@@ -28,7 +28,7 @@
  * @link		http://codeigniter.com/user_guide/libraries/output.html
  */
 class CI_Output {
-
+	
 	/**
 	 * Current output string
 	 *

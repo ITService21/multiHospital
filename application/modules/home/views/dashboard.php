@@ -173,6 +173,7 @@ if (!$this->ion_auth->in_group(array('superadmin'))) {
                                             $this->db->where('hospital_id', $this->hospital_id);
                                             $query = $this->db->get('bed')->result();
                                             $available_bed = 0;
+                                            //Bed Availability Check Logic
                                             foreach ($query as $bed) {
                                                 $last_a_time = explode('-', $bed->last_a_time);
                                                 $last_d_time = explode('-', $bed->last_d_time);

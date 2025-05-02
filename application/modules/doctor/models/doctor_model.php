@@ -12,7 +12,7 @@ class Doctor_model extends CI_model {
 
     function insertDoctor($data) {
         $data1 = array('hospital_id' => $this->session->userdata('hospital_id'));
-        $data2 = array_merge($data, $data1);
+        $data2 = array_merge($data, $data1); // it merge the hospital_id key to data object
         $this->db->insert('doctor', $data2);
     }
 
@@ -84,21 +84,21 @@ class Doctor_model extends CI_model {
                 ->from('doctor')
                 ->where('hospital_id', $this->session->userdata('hospital_id'))
                 ->where("(id LIKE '%" . $search . "%' OR name LIKE '%" . $search . "%' OR phone LIKE '%" . $search . "%' OR address LIKE '%" . $search . "%'OR email LIKE '%" . $search . "%'OR department LIKE '%" . $search . "%')", NULL, FALSE)
-                ->get();
+                ->get(); // get executes final query
 
-        return $query->result();
+        return $query->result(); // return returns array of object
     }
 
     function getDoctorById($id) {
         $this->db->where('id', $id);
         $query = $this->db->get('doctor');
-        return $query->row();
+        return $query->row(); // return single row
     }
 
     function getDoctorByIonUserId($id) {
         $this->db->where('ion_user_id', $id);
         $query = $this->db->get('doctor');
-        return $query->row();
+        return $query->row(); // return single row
     }
 
     function updateDoctor($id, $data) {
